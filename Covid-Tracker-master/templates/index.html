@@ -1,0 +1,155 @@
+{% extends "components/base.html" %}
+{% block content %}
+
+<section class="section">
+    <div class="container">
+        <h1 class="title">
+            Covid-Tracker Dashboard
+        </h1>
+        <p class="subtitle" id="summary">(Last Updated</p>
+        <hr>
+        <p class="subtitle">Summary: </p>
+        <div class="container">
+            <div class="columns" id='dashboard-summary'>
+                <div class="column" id="total">
+
+                </div>
+                <div class="column" id="deaths">
+
+                </div>
+                <div class="column" id="indian">
+
+                </div>
+                <div class="column" id="foreigner">
+
+                </div>
+            </div>
+        </div>
+        <hr>
+        <p class="subtitle" id="state-wise-data">State Wise Data:</p>
+        <div class="container">
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <td>
+                            State
+                        </td>
+                        <td>
+                            Total Confirmed
+                        </td>
+                        <td>
+                            Discharged
+                        </td>
+                        <td>
+                            Deaths
+                        </td>
+                        <td>
+                            Indians
+                        </td>
+                        <td>
+                            Foreigners
+                        </td>
+                    </tr>
+                </thead>
+                <tbody id="regional-data">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script>
+    dashboard = document.getElementById('dashboard-container')
+    $( document ).ready(function() {
+        $.getJSON("https://api.rootnet.in/covid19-in/stats/latest", function(result){
+            var summary = result['data']['summary'];
+            var regional = result['data']['regional'];
+            var refresh = result['lastRefreshed'].split("T");
+
+            document.getElementById('summary').innerHTML += `
+            ${refresh[0]} , ${refresh[1]} )
+            `;
+            document.getElementById('total').innerHTML += `
+            <div class="card">
+                <div class="card-content">
+                    <p class="title">
+                    ${summary['total']}
+                    </p>
+                    <p class="subtitle">
+                    Total
+                    </p>
+                </div>
+            </div>
+            `;
+            document.getElementById('deaths').innerHTML += `
+            <div class="card">
+                <div class="card-content">
+                    <p class="title">
+                    ${summary['deaths']}
+                    </p>
+                    <p class="subtitle">
+                    Deaths
+                    </p>
+                </div>
+            </div>
+            `;
+            document.getElementById('indian').innerHTML += `
+            <div class="card">
+                <div class="card-content">
+                    <p class="title">
+                    ${summary['confirmedCasesIndian']}
+                    </p>
+                    <p class="subtitle">
+                    Indians  
+                    </p>
+                </div>
+            </div>
+            `;
+            document.getElementById('foreigner').innerHTML += `
+            <div class="card">
+                <div class="card-content">
+                    <p class="title">
+                    ${summary['confirmedCasesForeign']}
+                    </p>
+                    <p class="subtitle">
+                    Foreigners  
+                    </p>
+                </div>
+            </div>
+            `;
+
+            for(var i = 0 ; i <= 34 ; i++)
+            {
+                document.getElementById('regional-data').innerHTML+= `
+                <tr>
+                    <td>${regional[i]['loc']}</td>
+                    <td>${regional[i]['totalConfirmed']}</td>
+                    <td>${regional[i]['discharged']}</td>
+                    <td>${regional[i]['deaths']}</td>
+                    <td>${regional[i]['confirmedCasesIndian']}</td>
+                    <td>${regional[i]['confirmedCasesForeign']}</td>
+                </tr>
+                `;
+            } 
+            });
+        });
+
+        // $.ajax({
+        //     url: 'https://api.rootnet.in/covid19-in/stats/latest',
+        //     type: 'POST',
+        //     dataType: 'json',
+        //     contentType: 'application/json',
+        //     headers:   {
+        //         "Access-Control-Allow-Origin":"*",
+        //     },
+        //     success: function (data) {
+        //                 console.log(data);
+        //             }
+        // });
+    // });
+</script>
+{% if alert %}
+<script> window.alert("Success");</script>
+{% endif %}
+{% endblock %}

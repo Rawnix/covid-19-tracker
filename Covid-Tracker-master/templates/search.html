@@ -1,0 +1,67 @@
+{% extends "components/base.html" %}
+
+{% block content %}
+
+<section class="container">
+    <br>
+    <br>
+    <div class="columns">
+        <div class="column is-full">
+            <div class="field">
+                <div class="control">
+                    <input class="input" id="searchquery" type="text" name = "search" placeholder="Enter Patient Name">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>  
+<section class="container">
+     <table class="table is-fullwidth">
+         <thead>
+             <tr>
+                 <td>Name</td>
+                 <td>State</td>
+                 <td>Updated on</td>
+                 <td>Age</td>
+                 <td>Reason</td>
+             </tr>
+         </thead>
+         <tbody id="appendArea">
+            
+         </tbody>
+     </table>
+</section>
+<script>
+    $('#searchquery').keyup(function(){
+        var searchQuery = this.value;
+        $.ajax({
+            url: '/api/search',
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                console.log(data);
+                appendToArea(data);
+            },
+            data: JSON.stringify({ "name": searchQuery})
+        });
+        
+        function appendToArea(data){
+            document.getElementById('appendArea').innerHTML = " ";
+            console.log(data.length);
+            for(var i = 0 ; i < data.length ; i++){
+                document.getElementById('appendArea').innerHTML += `
+                <tr>
+                    <td>${data[i][1]}</td>
+                    <td>${data[i][4]}</td>
+                    <td>${data[i][3]}</td>
+                    <td>${data[i][6]}</td>
+                    <td>${data[i][5]}</td>
+                <tr>
+                `;
+            }
+        }
+    });
+</script>
+
+{% endblock %}

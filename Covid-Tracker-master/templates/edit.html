@@ -1,0 +1,17 @@
+{% extends 'components/base.html' %}
+{% block content %}
+<form action="/edit" method="POST">
+    <section class="section">
+        <div class="field">
+            <label class="label">Id</label>
+            <div class="control">
+                <input class="input" type="number" name="id"
+                    placeholder="Numberinput" />
+            </div>
+        </div>
+        <div class="field">
+            <input type="submit" value="submit" />
+        </div>
+    </section>
+</form>
+{% endblock %}
