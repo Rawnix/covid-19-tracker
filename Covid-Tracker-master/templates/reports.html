@@ -1,0 +1,186 @@
+{% extends "components/base.html" %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="title text-center arvo h1">
+            Covid-19 Report
+        </h1>
+        
+        <hr>
+        <div id="stats_worldwide " class="text-center "> 
+            <span class="h3 kanit">Covid19 cases Worldwide: </span><br>
+            <span>Total Confirmed Cases: </span>
+            <span id="confirmed"></span><br>
+            <span>Total Deaths: </span>
+            <span id="deaths"></span><br>
+            <span>Total Recovered: </span>
+            <span id="recovered"></span><br>
+        </div><br><br>
+        <div id="plot_india"></div>
+        <table>
+        <tr>
+            <th>
+                Month
+            </th>
+            <th>
+                Cases
+            </th>
+        </tr>
+        <tr>
+            <td>Feb</td>
+            <td id = "feb">
+            </td>
+        </tr>
+
+        <tr>
+            <td>March</td>
+            <td id = "mar">
+            </td>
+        </tr>
+        <tr>
+            <td>April</td>
+            <td id = "apr">
+            </td>
+        </tr>
+        <tr>
+            <td>May</td>
+            <td id = "may">
+            </td>
+        </tr>
+        <tr>
+            <td>June</td>
+            <td id = "jun">
+            </td>
+        </tr>
+        <tr>
+            <td>July*</td>
+            <td id = "jul">
+            </td>
+        </tr>
+    </table>
+    </div>
+</section>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript"> //Using api from user "pomber" on github, here's the link: https://github.com/pomber/covid19
+        const url = 'https://pomber.github.io/covid19/timeseries.json'
+
+        //get request using jquery
+        $.get(url, {}
+
+            , function (data, status) {
+                if (status == 'success') {
+                    //Define the country name for which we need to plot the data.
+                    let countryRequired = 'India';
+                    //Defining all the variables to hold data
+                    let confirmed = 0;
+                    let deaths = 0;
+                    let recovered = 0;
+                    let confirmedCountryRequired = 0;
+                    let deathsCountryRequired = 0;
+                    let recoveredCountryRequired = 0;
+
+                    //Iterate properties in data object and then taking last element of array i.e. last day's data.
+                    for (var prop in data) {
+                        var item = data[prop];
+                        var countryData = item[item.length - 1];
+                        confirmed += countryData.confirmed;
+                        deaths += countryData.deaths;
+                        recovered += countryData.recovered;
+
+                        if (prop == countryRequired) {
+                            confirmedCountryRequired += countryData.confirmed;
+                            deathsCountryRequired += countryData.deaths;
+                            recoveredCountryRequired += countryData.recovered;
+                        }
+                    }
+
+                    //Setting the data in the respective html elements.
+                    document.getElementById("confirmed").innerHTML = confirmed;
+                    document.getElementById("deaths").innerHTML = deaths;
+                    document.getElementById("recovered").innerHTML = recovered;
+                    document.getElementById("confirmed_required_country").innerHTML = confirmedCountryRequired;
+                    document.getElementById("deaths_required_country").innerHTML = deathsCountryRequired;
+                    document.getElementById("recovered_required_country").innerHTML = recoveredCountryRequired;
+                    document.getElementById("required_country").innerHTML = countryRequired + ': ';
+
+
+                    //Getting the required country's data from the all countries data object.
+                    var requiredCountryData = data[countryRequired];
+
+                    //Declaring 2 arrays and pushing required country's confirmed case and date data into them.
+                    var x = [], y = [];
+                    var feb = 0,mar = 0,april = 0,may = 0, june = 0,july = 0;
+
+                    requiredCountryData.forEach(item => {
+                        y.push(item.confirmed);
+                            switch (item.date[5]) {
+                                case '2':feb=item.confirmed;
+                                    break;
+                                case '3':mar=item.confirmed;
+                                    break;
+                                case '4':april=item.confirmed;
+                                    break;
+                                case '5':may=item.confirmed;
+                                    break;
+                                case '6':june=item.confirmed;
+                                    break;
+                                case '7':july=item.confirmed;
+                                    break;
+                            }
+                        x.push(item.date);
+                    }
+
+                    );
+                    document.getElementById('feb').innerHTML = feb;
+                    document.getElementById('mar').innerHTML = mar;
+                    document.getElementById('apr').innerHTML = april;
+                    document.getElementById('may').innerHTML = may;
+                    document.getElementById('jun').innerHTML = june;
+                    document.getElementById('jul').innerHTML = july;
+
+                    //Defining the layout and title, xaxis and yaxis values of the graph
+
+                    var layout = {
+
+                        title: 'No. of cases per day COVID-19 in ' + countryRequired,
+                        xaxis: {
+                            title: 'Days',
+                            showgrid: false,
+                            zeroline: false
+                        }
+
+                        ,
+                        yaxis: {
+                            title: 'No. of cases',
+                            showline: false
+                        }
+                    }
+
+                        ;
+
+                    //Building object for confirmed cases using x and y arrays we made above.
+                    var confirmedCases = {
+                        x,
+                        y,
+                        type: 'scatter'
+                    }
+
+                        ;
+
+                    var plotData = [confirmedCases];
+
+                    //Using Plotly(js library) plot the graph with the layout and plotData in html element with id plot_india
+                    Plotly.newPlot('plot_india', plotData, layout);
+                }
+
+                else {
+                    alert('Error in fetching the covid19 data.');
+                }
+            }
+
+        ) </script>
+
+{% endblock %}

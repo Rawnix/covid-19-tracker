@@ -3,41 +3,28 @@
 {% block content %}
 <section class="section">
     <div class="container">
-        <h1 class="title">Major Reasons</h1>
-        <canvas id="myChart" width="100" height="100"></canvas>
+        <h1 class="title">Major Reasons of Spread</h1>
+        <div id="piechart_3d" style="width: 1050px; height: 400px; margin: 0 auto;"></div>
+        
         <br>
         <h1 class="title">Age Wise</h1>
         <canvas id="myChart2" width="100" height="100"></canvas>
+
+        <h1 class="title mt-4">Agewise Spread</h1>
+        <div id="container-bar" style="width: 1050px; height: 400px; margin: 0 auto;"></div>
     </div>
 </section>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
-    var reason = {{reason | safe}};
+    
     // reason = unescape(reason);
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var chart = new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'line',
-
-    // The data for our dataset
-    data: {
-        labels: ['Travel Abroad', 'Travel Within Country', 'Person to Person'],
-        datasets: [{
-            label: 'Major Reasons for the Spread',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [reason['Travel Abroad'], reason['Travel Within Country'], reason['Person to Person']]
-        }]
-    },
-
-    // Configuration options go here
-    options: {}
-    });
-
+    
 // var patients = {{ patients }};
-
+    
 // for(var i = 0 ; i < {{patients}}.length;i++){
 //     console.log({{patients}}[i]);
 // }
+
 var ctx = document.getElementById('myChart2').getContext('2d');
 
 var ages = {{age | safe}};
@@ -53,6 +40,114 @@ var myLineChart = new Chart(ctx, {
     },
     options: {}
 });
+var ten = 0;
+var twn = 0;
+var thr = 0;
+var fot = 0;
+var fif = 0;
+var six = 0;
+var sev = 0;
+var eit = 0;
+var nin = 0;
+var hun = 0;
 
+for(var i = 11 ; i <= 20 ; i++) {
+    if (ages[i] != null)
+    twn += ages[i];
+}
+for(var i = 21 ; i <= 30 ; i++) {
+    if (ages[i] != null)
+    thr += ages[i];
+}
+for(var i = 31 ; i <= 40 ; i++) {
+    if (ages[i] != null)
+    fot += ages[i];
+}
+for(var i = 41 ; i <= 50 ; i++) {
+    if (ages[i] != null)
+    fif += ages[i];
+}
+for(var i = 51 ; i <= 60 ; i++) {
+    if (ages[i] != null)
+    six += ages[i];
+}
+for(var i = 61 ; i <= 70 ; i++) {
+    if (ages[i] != null)
+    sev += ages[i];
+}
+for(var i = 71 ; i <= 80 ; i++) {
+    if (ages[i] != null)
+    eit += ages[i];
+}
+for(var i = 81 ; i <= 90 ; i++) {
+    if (ages[i] != null)
+    nin += ages[i];
+}
+for(var i = 91 ; i <= 100 ; i++) {
+    if (ages[i] != null)
+    hun += ages[i];
+}
+for(var i = 1 ; i <= 10 ; i++) {
+    if (ages[i] != null)
+    ten += ages[i];
+}
+console.log(thr);
+//////////////////
+google.charts.load('current', {
+            packages: ['corechart']
+        });
+
+        function drawChart() {
+            
+            var data = google.visualization.arrayToDataTable([
+                ['Age group', 'Covid Positive Patient'],
+                ['1-10', ten],
+                ['11-20', twn],
+                ['21-30', thr],
+                ['31-40', fot],
+                ['41-50', fif],
+                ['51-60', six],
+                ['61-70', sev],
+                ['71-80', eit],
+                ['81-90', nin],
+                ['91-100', hun]
+            ]);
+            var options = {
+                    title: 'Age group wise Spread',
+                    isStacked: true
+            };
+            
+            var chart = new google.visualization.ColumnChart(document.getElementById('container-bar'));
+            chart.draw(data, options);
+        }
+        google.charts.setOnLoadCallback(drawChart);
+</script>
+
+
+
+
+
+
+
+<script>
+    var reason = {{reason | safe}};
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Reason', 'count'],
+                ['Travel Abroad', reason['Travel Abroad']],
+                ['Travel Within Country', reason['Travel Within Country']],
+                ['Person to Person', reason['Person to Person']]
+            ]);
+
+            var options = {
+                title: 'Reason of Spread',
+                is3D: true,
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('piechart_3d')); 
+            chart.draw(data, options);
+        }
+        google.charts.setOnLoadCallback(drawChart);
 </script>
 {% endblock %}

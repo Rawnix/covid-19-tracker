@@ -2,7 +2,7 @@ from flask import Flask, flash, redirect, url_for, render_template, request, ses
 from datetime import date
 import os
 from collections import Counter
-import bson
+import json
 import sqlite3
 from functools import wraps
 
@@ -59,6 +59,9 @@ def index():
 def patient_form():
     return render_template('patientform.html')
 
+@app.route('/assess')
+def self_assessment():
+    return render_template('assessment.html')
 
 @app.route('/addpatient', methods=['POST'])
 def add_patient():
@@ -79,6 +82,9 @@ def add_patient():
 
     return render_template('index.html', alert=True)
 
+@app.route('/symptoms')
+def reports():
+    return render_template('symptoms.html')
 
 @app.route('/report')
 def report():
@@ -125,7 +131,7 @@ def search_name():
         patients = cur.fetchall()
     response = patients
 
-    return bson.json_util.dumps(response)
+    return json.dumps(response)
 
 
 # Check if user logged in

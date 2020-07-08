@@ -1,0 +1,109 @@
+{% extends "components/base.html" %}
+{% block content %}
+<div class="container mt-4 mb-3 " style="background-color: #e3f2fd; padding-top: 15px; padding-bottom: 15px; max-width: 700px;">
+    <form onsubmit="return assessFunction()">
+        <section class="section">
+            <h1 class="h2 text-center">Self Assessment</h1>
+            <div class="field">
+                <label class="label">Have you come in contact with a Covid-19 positive patient?</label>
+                <div class="control">
+                    <label class="radio">
+                      <input type="radio" id="q1" name="foobar1">
+                      Yes
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="q1n" name="foobar1" checked>
+                      No
+                    </label>
+                  </div>
+            </div>
+            <div class="field">
+                <label class="label">Is there a covid-19 positive patient in 100m radius of your house?</label>
+                <div class="control">
+                    <label class="radio">
+                      <input type="radio" id="q2" name="foobar2">
+                      Yes
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="q2n" name="foobar2" checked>
+                      No
+                    </label>
+                  </div>
+            </div>
+            <div class="field">
+                <label class="label">Are you feeling Tiredness?</label>
+                <div class="control">
+                    <label class="radio">
+                      <input type="radio" id="q3" name="foobar3">
+                      Yes
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="q3n" name="foobar3" checked>
+                      No
+                    </label>
+                  </div>
+            </div>
+            <div class="field">
+                <label class="label">Are you having Dry Cough?</label>
+                <div class="control">
+                    <label class="radio">
+                      <input type="radio" id="q4" name="foobar4">
+                      Yes
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="q4n" name="foobar4" checked>
+                      No
+                    </label>
+                  </div>
+            </div>
+            <div class="field">
+                <label class="label">Are you having fever?</label>
+                <div class="control">
+                    <label class="radio">
+                      <input type="radio" id="q5" name="foobar5">
+                      Yes
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="q5n" name="foobar5" checked>
+                      No
+                    </label>
+                  </div>
+            </div>
+            <div class="field">
+                <label class="label">Are you having headache?</label>
+                <div class="control">
+                    <label class="radio">
+                      <input type="radio" id="q6" name="foobar6">
+                      Yes
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="q6n" name="foobar6" checked>
+                      No
+                    </label>
+                  </div>
+            </div>
+            <div class="field is-grouped is-grouped-center">
+                <p>
+                <button class="button is-link" name="submit" type="submit">Submit</button>
+                </p>
+                
+            </div>
+        </section>
+    </form>
+</div>
+<script>
+    function assessFunction() {
+        var cnt = 0;
+        if (document.getElementById('q1').checked) cnt++;
+        if (document.getElementById('q2').checked) cnt++;
+        if (document.getElementById('q3').checked) cnt++;
+        if (document.getElementById('q4').checked) cnt++;
+        if (document.getElementById('q5').checked) cnt++;
+        if (document.getElementById('q6').checked) cnt++;
+        var riskPercent = (100/6)*cnt;
+        alert("Risk Percentge: "+ riskPercent+"%");
+        
+        return false;
+    }
+</script>
+{% endblock %}

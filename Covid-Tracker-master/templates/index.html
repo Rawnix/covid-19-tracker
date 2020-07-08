@@ -3,50 +3,58 @@
 
 <section class="section">
     <div class="container">
-        <h1 class="title">
-            Covid-Tracker Dashboard
+        <h1 class="title text-center arvo h1">
+            Covid-19 Dashboard
         </h1>
-        <p class="subtitle" id="summary">(Last Updated</p>
+        <p class="subtitle text-center" id="summary" hidden>(Last Updated</p>
         <hr>
-        <p class="subtitle">Summary: </p>
+        <p class="subtitle text-center is-size-4 kanit">India Overall Statistics: </p>
         <div class="container">
             <div class="columns" id='dashboard-summary'>
                 <div class="column" id="total">
 
                 </div>
-                <div class="column" id="deaths">
+                <div class="column" id="foreigner" >
 
                 </div>
                 <div class="column" id="indian">
 
                 </div>
-                <div class="column" id="foreigner">
+                <div class="column" id="deaths">
 
                 </div>
             </div>
         </div>
         <hr>
-        <p class="subtitle" id="state-wise-data">State Wise Data:</p>
+        <p class="subtitle text-center is-size-4 kanit" id="state-wise-data">State Wise Statistics:</p>
         <div class="container">
-            <table class="table is-fullwidth">
-                <thead>
+            <div class="field">
+                <div class="control ">
+                    <input class="input is-dark" type="text" id = "stateName" onkeyup = "searchFunction()"  placeholder = "Search for state ...">
+                </div>
+            </div>
+            <table id="stateTable" class="table is-striped is-bordered is-hoverable">
+                <thead class="has-background-dark">
                     <tr>
-                        <td>
+                        <td class="has-text-white-bis">
                             State
                         </td>
-                        <td>
+                        <td class="has-text-white-bis text-center">
                             Total Confirmed
                         </td>
-                        <td>
-                            Discharged
+                        <td class="has-text-white-bis text-center">
+                            Active
                         </td>
-                        <td>
+                        <td class="has-text-white-bis text-center">
+                            Recovered
+                        </td>
+                        <td class="has-text-white-bis text-center">
                             Deaths
                         </td>
-                        <td>
+                        <td class="has-text-white-bis text-center">
                             Indians
                         </td>
-                        <td>
+                        <td class="has-text-white-bis text-center">
                             Foreigners
                         </td>
                     </tr>
@@ -60,7 +68,7 @@
 </section>
 
 <script>
-    dashboard = document.getElementById('dashboard-container')
+    dashboard = document.getElementById('dashboard-summary')
     $( document ).ready(function() {
         $.getJSON("https://api.rootnet.in/covid19-in/stats/latest", function(result){
             var summary = result['data']['summary'];
@@ -83,7 +91,7 @@
             </div>
             `;
             document.getElementById('deaths').innerHTML += `
-            <div class="card">
+            <div class="card has-background-danger">
                 <div class="card-content">
                     <p class="title">
                     ${summary['deaths']}
@@ -95,25 +103,25 @@
             </div>
             `;
             document.getElementById('indian').innerHTML += `
-            <div class="card">
+            <div class="card has-background-success">
                 <div class="card-content">
                     <p class="title">
-                    ${summary['confirmedCasesIndian']}
+                    ${summary['discharged']}
                     </p>
                     <p class="subtitle">
-                    Indians  
+                    Recovered  
                     </p>
                 </div>
             </div>
             `;
             document.getElementById('foreigner').innerHTML += `
-            <div class="card">
+            <div class="card has-background-info">
                 <div class="card-content">
                     <p class="title">
-                    ${summary['confirmedCasesForeign']}
+                    ${summary['total'] - summary['deaths'] - summary['discharged']}
                     </p>
                     <p class="subtitle">
-                    Foreigners  
+                    Active  
                     </p>
                 </div>
             </div>
@@ -124,11 +132,12 @@
                 document.getElementById('regional-data').innerHTML+= `
                 <tr>
                     <td>${regional[i]['loc']}</td>
-                    <td>${regional[i]['totalConfirmed']}</td>
-                    <td>${regional[i]['discharged']}</td>
-                    <td>${regional[i]['deaths']}</td>
-                    <td>${regional[i]['confirmedCasesIndian']}</td>
-                    <td>${regional[i]['confirmedCasesForeign']}</td>
+                    <td class="text-center">${regional[i]['totalConfirmed']}</td>
+                    <td class="text-center">${regional[i]['totalConfirmed']-regional[i]['discharged']-regional[i]['deaths']}</td>
+                    <td class="text-center">${regional[i]['discharged']}</td>
+                    <td class="text-center">${regional[i]['deaths']}</td>
+                    <td class="text-center">${regional[i]['confirmedCasesIndian']}</td>
+                    <td class="text-center">${regional[i]['confirmedCasesForeign']}</td>
                 </tr>
                 `;
             } 
@@ -148,6 +157,27 @@
         //             }
         // });
     // });
+
+    function searchFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("stateName");
+            filter = input.value.toLowerCase();
+            table = document.getElementById("stateTable");
+            tr = table.getElementsByTagName("tr");
+            for(i = 0; i < tr.length; i++) {
+                // first column for state name
+                td = tr[i].getElementsByTagName("td")[0];
+                if(td) {
+                    txtValue = td.textContent || td.innerText;
+                    // indexof(filter) return first index of substring found
+                    if(txtValue.toLocaleLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
 </script>
 {% if alert %}
 <script> window.alert("Success");</script>
