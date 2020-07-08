@@ -1,16 +1,79 @@
 {% extends "components/base.html" %}
 
 {% block content %}
-    <div class="container mt-4" style="background-color: #e3f2fd; padding-top: 15px; padding-bottom: 15px; max-width: 500px;">
-        <form method="post" action="/login">
+<style>
+    /* Styles go here */
+
+.validation {
+  position: relative;
+}
+.input-help {
+  position:absolute;
+  z-index: 100;
+  top: 61px;
+  right: 0;
+  width: 200px;
+  padding: 10px;
+  background: #fefefe;
+  font-size: .875em;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px #aaa;
+  border: 1px solid red;
+  opacity: 0.9;
+}
+.input-help::before {
+  content: "\25b2";
+  position: absolute;
+  top: -12px;
+  left: 90px;
+  right: 0;
+  font-size :16px;
+  line-height: 16px;
+  color: red;
+  text-shadow: none;
+}
+.input-help p {
+  margin-bottom: 0;
+}
+.input-help ul {
+  margin-top: 10px;
+}
+
+/*Show red border if kept the input empty after touching*/
+.ng-touched.ng-invalid-required {
+	border-color: red;
+}
+/* Show red border when stuff has been typed in, but its invalid */
+.ng-dirty.ng-invalid {
+  border-color: red;
+}
+/*Show normal border color when typed in for the first time*/
+.ng-untouched.ng-invalid {
+	border-color: #ccc;	
+}
+.ng-submitted input.ng-invalid{
+  border-color: red;
+}
+</style>
+<script>
+    var app = angular.module("login", []);
+</script>
+    <div ng-app="login" class="container mt-4" style="background-color: #e3f2fd; padding-top: 15px; padding-bottom: 15px; max-width: 500px;">
+        <form method="post" action="/login" name="createLogin">
             <h1 class="h2 text-center">Login</h1>
             <div class="form-group">
                 <label for="Email">Admin ID</label>
-                <input type="text" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="Enter your Admin ID" name="username" required>
+                <input type="text" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="Enter your Admin ID" name="username" ng-model="name" required>
+                <div class="input-help" ng-show="(createLogin.$submitted && createLogin.Email.$invalid) || (createLogin.Email.$touched && createLogin.Email.$invalid)">
+                    <p ng-show="createLogin.username.$error.required">This field is required</p>
+                </div>
             </div>
             <div class="form-group">
                 <label for="Password">Password</label>
-                <input type="password" class="form-control" id="Password" placeholder="Password" name="password" required>
+                <input type="password" class="form-control" id="Password" placeholder="Password" name="password" ng-model="pswd" required>
+                <div class="input-help" ng-show="(createLogin.$submitted && createLogin.Password.$invalid) || (createLogin.Password.$touched && createLogin.Password.$invalid)">
+                    <p ng-show="createLogin.password.$error.required">This field is required</p>
+                </div>
             </div>
             <div class=" text-center">
                 <button type="submit" class="btn btn-big btn-primary">Login</button>
