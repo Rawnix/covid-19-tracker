@@ -19,6 +19,7 @@
      <table class="table is-striped is-hoverable">
          <thead class="has-background-dark">
              <tr>
+                <td class="has-text-white-bis">Patient ID</td>
                  <td class="has-text-white-bis">Name</td>
                  <td class="has-text-white-bis">State</td>
                  <td class="has-text-white-bis">Updated on</td>
@@ -52,6 +53,7 @@
             for(var i = 0 ; i < data.length ; i++){
                 document.getElementById('appendArea').innerHTML += `
                 <tr>
+                    <td>${data[i][0]}</td>
                     <td>${data[i][1]}</td>
                     <td>${data[i][4]}</td>
                     <td>${data[i][3]}</td>
